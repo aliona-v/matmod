@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <label>Количество значений в векторе X<input type="number" min="1" value="3"></label>
+    <label>Количество значений в векторе Y<input type="number" min="1" value="3"></label>
+    <button onclick="rebuildMatrix()">Перестроить матрицу</button>
+    <div class="matrix">
+        <table>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <label class="mat">Мат ожидание M(X) = <span></span> Мат ожидание M(Y) = <span></span></label><br>
+    <label class="disp">Дисперсия D(X) = <span></span> Дисперсия D(Y) = <span></span></label><br>
+    <label class="korr">Коэффициент корреляция = <span></span></label><br>
+    <label>Длина реализации <input class="seriesLength" type="number" min="1" value="100"></label><br>
+    <button onclick="compute()">Посчитать/построить графики</button><br>
+    <div id="x"></div><br>
+    <div id="y"></div><br>
+    <div id="xy"></div><br>
+    <script src="index.js"></script>
+    <script src="../node_modules/plotly.js/dist/plotly.js"></script>
+</body>
+</html>
