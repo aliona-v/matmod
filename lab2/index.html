@@ -5,20 +5,35 @@
     <title>Title</title>
 </head>
 <body>
-    <h2>Равномерное распределение</h2>
-    <label>
-        a:&nbsp;<input type="text" class="a" value="2">
-    </label>
-    <label>
-        b: <input type="text" class="b" value="5">
-    </label>
-    <label>
-        <button onclick="redrawCharts()">Перерисовать чарты</button>
-    </label>
-    <p>M: <span class="M"></span> D: <span class="D"></span></p>
-    <div id="histogram"></div>
-    <div id="distribution"></div>
-    <div id="density"></div>
+    <div class="uniform-distribution">
+        <h2>Равномерное распределение</h2>
+        <label>
+            a:&nbsp;<input type="text" class="a" value="2">
+        </label>
+        <label>
+            b: <input type="text" class="b" value="5">
+        </label>
+        <label>
+            <button onclick="redrawCharts()">Перерисовать чарты</button>
+        </label>
+        <p>M: <span class="M"></span> D: <span class="D"></span></p>
+        <div id="uniform-histogram"></div>
+        <div id="uniform-distribution"></div>
+        <div id="uniform-density"></div>
+    </div>
+    <div class="exponential-distribution">
+        <h2>Показательное распределение</h2>
+        <label>
+            λ:&nbsp;<input type="text" class="lambda" value="1.5">
+        </label>
+        <label>
+            <button onclick="redrawCharts()">Перерисовать чарты</button>
+        </label>
+        <p>M: <span class="M"></span> D: <span class="D"></span></p>
+        <div id="exponential-histogram"></div>
+        <div id="exponential-distribution"></div>
+        <div id="exponential-density"></div>
+    </div>
     <script src="../node_modules/plotly.js/dist/plotly.js"></script>
     <script src="index.js"></script>
 </body>

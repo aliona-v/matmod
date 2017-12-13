@@ -1,21 +1,63 @@
-function getCumulativeDistribution({ randomNumber, a, b }) {
-  return (randomNumber - a) / (b - a);
+class UniformDistribution {
+  constructor() {
+    const values = {
+      a: +document.querySelector('.a').value,
+      b: +document.querySelector('.b').value,
+    };
+    this.a = values.a;
+    this.b = values.b;
+    this.name = 'uniform';
+  }
+
+  getCumulativeDistribution(randomNumber) {
+    return (randomNumber - this.a) / (this.b - this.a);
+  }
+
+  getDistribution(randomNumber) {
+    return [randomNumber, this.getCumulativeDistribution(randomNumber)];
+  }
+
+  getDensity(randomNumber) {
+    return [randomNumber, 1 / (this.b - this.a)];
+  }
+
+  getM() {
+    return (this.a + this.b) / 2;
+  }
+
+  getD() {
+    return ((this.b - this.a) ** 2) / 12;
+  }
 }
 
-function getDistribution(obj) {
-  return [getCumulativeDistribution(obj), obj.randomNumber];
-}
+class ExponentialDistribution {
+  constructor() {
+    this.lambda = +document.querySelector('.lambda').value;
+    this.name = 'exponential';
+  }
 
-function getDensity(obj) {
-  return [getCumulativeDistribution(obj), 1 / (obj.b - obj.a)];
-}
+  getCumulativeDistribution(randomNumber) {
+    return 1 - (Math.E ** (-this.lambda * randomNumber));
+  }
 
-function getM({ a, b }) {
-  return (a + b) / 2;
-}
+  getDistribution(randomNumber) {
+    return [randomNumber, this.getCumulativeDistribution(randomNumber)];
+  }
 
-function getD({ a, b }) {
-  return ((b - a) ** 2) / 12;
+  getDensity(randomNumber) {
+    return [
+      randomNumber,
+      this.lambda * (Math.E ** (-this.lambda * randomNumber)),
+    ];
+  }
+
+  getM() {
+    return 1 / this.lambda;
+  }
+
+  getD() {
+    return this.lambda ** -2;
+  }
 }
 
 function* multipleCongruent(count = 100, m = 2 ** 48, k = 252149039177, begin = 1) {
@@ -27,36 +69,35 @@ function* multipleCongruent(count = 100, m = 2 ** 48, k = 252149039177, begin = 
 }
 
 function redrawCharts() {
-  const values = {
-    a: +document.querySelector('.a').value,
-    b: +document.querySelector('.b').value,
-  };
+  [new UniformDistribution(), new ExponentialDistribution()].forEach((distribution) => {
+    const histogramData = [...multipleCongruent(10000)]
+      .map(randomNumber => distribution.getCumulativeDistribution(randomNumber));
+    Plotly.newPlot(`${distribution.name}-histogram`, [{
+      x: histogramData,
+      type: 'histogram',
+    }]);
 
-  const histogramData = [...multipleCongruent(10000)]
-    .map(randomNumber => getCumulativeDistribution({ randomNumber, ...values }));
-  Plotly.newPlot('histogram', [{
-    x: histogramData,
-    type: 'histogram',
-  }]);
+    const distributionData = [...multipleCongruent(10000)]
+      .map(randomNumber => distribution.getDistribution(randomNumber));
+    Plotly.newPlot(`${distribution.name}-distribution`, [{
+      x: distributionData.map(arr => arr[0]),
+      y: distributionData.map(arr => arr[1]),
+      type: 'scatter',
+      mode: 'markers',
+    }]);
 
-  const distributionData = [...multipleCongruent(10000)]
-    .map(randomNumber => getDistribution({ randomNumber, ...values }));
-  Plotly.newPlot('distribution', [{
-    x: distributionData.map(arr => arr[0]),
-    y: distributionData.map(arr => arr[1]),
-    type: 'scatter',
-  }]);
+    const densityData = [...multipleCongruent(10000)]
+      .map(randomNumber => distribution.getDensity(randomNumber));
+    Plotly.newPlot(`${distribution.name}-density`, [{
+      x: densityData.map(arr => arr[0]),
+      y: densityData.map(arr => arr[1]),
+      type: 'scatter',
+      mode: 'markers',
+    }]);
 
-  const densityData = [...multipleCongruent(10000)]
-    .map(randomNumber => getDensity({ randomNumber, ...values }));
-  Plotly.newPlot('density', [{
-    x: densityData.map(arr => arr[0]),
-    y: densityData.map(arr => arr[1]),
-    type: 'scatter',
-  }]);
-
-  document.querySelector('.M').innerText = getM(values);
-  document.querySelector('.D').innerText = getD(values);
+    document.querySelector(`.${distribution.name}-distribution .M`).innerText = distribution.getM();
+    document.querySelector(`.${distribution.name}-distribution .D`).innerText = distribution.getD();
+  });
 }
 
 redrawCharts();
