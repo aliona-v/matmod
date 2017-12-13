@@ -5,8 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-    <input type="number" min="1" value="1000">
-    <button onclick="doGame(parseInt(document.querySelector('input').value, 10))">Переиграть</button>
+    <label>Количество дверей: <input class="doorsCount" type="number" min="3" value="50"></label>
+    <input class="gamesCount" type="number" min="1" value="1000">
+    <button onclick="doGame(parseInt(document.querySelector('.gamesCount').value, 10), parseInt(document.querySelector('.doorsCount').value, 10))">Переиграть</button>
     <p>
         Количество выгрышных партий, когда дверь не менялась: <span></span>
     </p>
